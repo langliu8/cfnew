@@ -2,6 +2,8 @@
 
 这个仓库由 Cloudflare Workers Builds 在构建阶段读取 `明文源吗`，生成临时混淆产物 `dist/worker.js`，验证后通过 Wrangler 上传。`dist/` 不进入 Git 历史。
 
+当前连接的 Worker 是 `ancient-wind-a3f5`，Wrangler 配置会保留现有 KV 绑定 `C`。
+
 ## Workers Builds 设置
 
 在 Worker 的 **Settings > Build** 中使用：
