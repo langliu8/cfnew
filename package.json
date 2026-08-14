@@ -15,6 +15,6 @@
   },
   "devDependencies": {
     "javascript-obfuscator": "5.4.3",
-    "wrangler": "4.115.0"
+    "wrangler": "4.123.0"
   }
 }
