@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "ancient-wind-a3f5",
+  "main": "dist/worker.js",
+  "compatibility_date": "2026-01-20",
+  "keep_vars": true,
+  "workers_dev": true,
+  "kv_namespaces": [
+    {
+      "binding": "C",
+      "id": "c6876a088bc64ed0a2205b3a43d93d0c"
+    }
+  ]
+}

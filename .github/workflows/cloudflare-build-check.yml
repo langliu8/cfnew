@@ -1,0 +1,55 @@
+name: Validate Cloudflare obfuscation build
+
+on:
+  push:
+    branches:
+      - codex/cloudflare-obfuscated-build
+    paths:
+      - package.json
+      - scripts/**
+      - test/**
+      - wrangler.json
+      - .github/workflows/cloudflare-build-check.yml
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Create or verify the dependency lock
+        run: npm install --package-lock-only --ignore-scripts
+
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Reject high-severity build dependency vulnerabilities
+        run: npm audit --audit-level=high
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build the real obfuscated Worker
+        run: npm run build
+
+      - name: Validate Wrangler packaging
+        run: npx wrangler deploy --dry-run --no-bundle
+
+      - name: Commit the generated lock file once
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add package-lock.json
+          if git diff --staged --quiet; then
+            echo 'package-lock.json is already current.'
+          else
+            git commit -m 'build: lock Cloudflare toolchain dependencies'
+            git push
+          fi

@@ -1,0 +1,20 @@
+{
+  "name": "cfnew-cloudflare-build",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/build-worker.mjs",
+    "verify": "node scripts/verify-worker.mjs",
+    "deploy:cf": "wrangler deploy --no-bundle",
+    "preview:cf": "wrangler versions upload --no-bundle",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "javascript-obfuscator": "5.4.3",
+    "wrangler": "4.123.0"
+  }
+}
