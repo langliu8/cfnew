@@ -9,9 +9,10 @@ import { verifyWorker } from '../scripts/verify-worker.mjs';
 
 const source = `
 const greeting = 'hello from the worker';
+const padding = '${"x".repeat(1400)}';
 export default {
   fetch() {
-    return new Response(greeting);
+    return new Response(greeting + padding.slice(0, 0));
   }
 };
 `;
@@ -20,13 +21,13 @@ test('obfuscates a real module Worker into a verified artifact', async () => {
   const directory = await mkdtemp(join(tmpdir(), 'cfnew-build-'));
   const sourcePath = join(directory, 'source.js');
   const outputPath = join(directory, 'dist', 'worker.js');
-  await writeFile(sourcePath, source.repeat(20));
+  await writeFile(sourcePath, source);
 
   const metadata = await buildWorker({ sourcePath, outputPath });
   const output = await readFile(outputPath, 'utf8');
   const verified = await verifyWorker({ sourcePath, outputPath, minimumBytes: 1 });
 
-  assert.notEqual(output, source.repeat(20));
+  assert.notEqual(output, source);
   assert.doesNotMatch(output, /sourceMappingURL/);
   assert.equal(metadata.outputHash, verified.outputHash);
   assert.notEqual(metadata.sourceHash, metadata.outputHash);
